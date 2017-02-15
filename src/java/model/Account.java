@@ -23,12 +23,18 @@ import javax.faces.bean.ApplicationScoped;
  */
 @ApplicationScoped
 public class Account {
+    private double balance = 0.0;
+      
     /**
+     *
      * Returns the current total balance of the account
+     * 
      * @return - the balance
+     * 
      */
+    
     public double getBalance() {
-        return -999;
+        return balance;
     }
     
     /**
@@ -36,7 +42,7 @@ public class Account {
      * @param cash - the cash to deposit
      */
     public void deposit(double cash) {
-        
+        balance += cash;
     }
     
     /**
@@ -44,13 +50,13 @@ public class Account {
      * @param cash - the cash to withdraw
      */
     public void withdraw(double cash) {
-    
+        balance -= cash;
     }
     
     /**
      * Deducts all cash from the total balance of the account
      */
     public void close() {
-        
+        balance = 0.00;
     }
 }

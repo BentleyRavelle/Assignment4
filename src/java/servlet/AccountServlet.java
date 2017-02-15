@@ -16,13 +16,61 @@
 
 package servlet;
 
-import javax.servlet.annotation.WebServlet;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import model.Account;
 /**
  * Provides an Account Balance and Basic Withdrawal/Deposit Operations
  */
 @WebServlet("/account")
 public class AccountServlet extends HttpServlet {
+    
+    Account account = new Account();
+    
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+     {
+         
+            try  (PrintWriter out = response.getWriter()) {
+            double balance = account.getBalance();
+            response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
+            response.setHeader("Pragma", "no-cache");
+            response.setDateHeader("Expires", 0);
+            out.println(balance);
+            } catch (IOException ex) {
+            Logger.getLogger(AccountServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    {
+        
+        String depositPar = request.getParameter("deposit");
+        double amount = 0;
+        if(depositPar != null){
+            amount = Double.parseDouble (depositPar);
+            account.deposit(amount);
+        }
+        
+        String withdrawPar = request.getParameter("withdraw");
+        amount = 0;
+        if(withdrawPar != null){
+            amount = Double.parseDouble (withdrawPar);
+            account.withdraw(amount);
+        }
+        
+        String closePar = request.getParameter("close");
+        if(closePar != null) {
+            account.close();
+        }
+    }
     
 }
